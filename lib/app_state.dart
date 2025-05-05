@@ -16,6 +16,7 @@ class AppState {
   Timer? _elapseTimer;
   int elapsed_recovered = 0;
   int elapsed = 0;
+  int? openWeek = null;
 
   AppState._internal();
 
@@ -42,12 +43,15 @@ class AppState {
     _elapseTimer = null;
   }
 
-  Future<void> resetStopwatch() async {
+  Future<void> resetStopwatch(int? week) async {
     stopwatch.stop();
     stopwatch.reset();
     elapsed = 0;
     elapsed_recovered = 0;
     await DatabaseHelper.deleteTimeSession();
+    if (week != null) {
+      await DatabaseHelper.deleteWeekState(week);
+    }
   }
 
   // Priv

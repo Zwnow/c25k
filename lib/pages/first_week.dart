@@ -1,4 +1,5 @@
 import 'package:c25k/app_state.dart';
+import 'package:c25k/database_helper.dart';
 import 'package:c25k/stopwatch.dart';
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
@@ -49,6 +50,22 @@ class _FirstWeekState extends State<FirstWeek> {
   int phaseIndex = 0;
   int seconds_elapsed = 0;
 
+  Future<void> recoverState() async {
+    appState.openWeek = 1;
+    final state = await DatabaseHelper.getWeekState(1);
+    if (state != null) {
+      phaseIndex = state['phase_index'] as int;
+      seconds_elapsed = state['seconds_elapsed'] as int;
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    recoverState();
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -90,6 +107,10 @@ class _FirstWeekState extends State<FirstWeek> {
                   child: C25KStopwatch(
                     onSecondTick: (seconds) async {
                       seconds_elapsed += 1;
+                      // Store state
+                      await DatabaseHelper.storeWeekState(
+                          1, phaseIndex, seconds_elapsed);
+
                       if (seconds_elapsed >= phases[phaseIndex].interval &&
                           !stopIncrementing) {
                         seconds_elapsed = 0;
@@ -110,6 +131,11 @@ class _FirstWeekState extends State<FirstWeek> {
                         }
                         setState(() {});
                       }
+                    },
+                    onReset: () {
+                      phaseIndex = 0;
+                      seconds_elapsed = 0;
+                      setState(() {});
                     },
                   ),
                 ),

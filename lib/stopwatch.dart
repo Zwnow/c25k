@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 
 class C25KStopwatch extends StatefulWidget {
   final void Function(int seconds)? onSecondTick;
+  final void Function()? onReset;
 
-  const C25KStopwatch({super.key, this.onSecondTick});
+  const C25KStopwatch({super.key, this.onSecondTick, this.onReset});
 
   @override
   State<C25KStopwatch> createState() => _C25KStopwatchState();
@@ -71,7 +72,8 @@ class _C25KStopwatchState extends State<C25KStopwatch> {
             FloatingActionButton(
               heroTag: 2,
               onPressed: () async {
-                await appState.resetStopwatch();
+                await appState.resetStopwatch(appState.openWeek);
+                widget.onReset!();
                 setState(() {});
               },
               child: const Icon(Icons.stop),

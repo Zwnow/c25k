@@ -37,6 +37,43 @@ class DatabaseHelper {
       elapsed_millis INTEGER NOT NULL
     )
     ''');
+
+    await db.execute('''
+    CREATE TABLE week_state (
+      id INTEGER PRIMARY KEY,
+      phase_index INTEGER,
+      seconds_elapsed INTEGER
+    )
+    ''');
+  }
+
+  static Future<int> storeWeekState(int week, int index, int seconds) async {
+    final db = await database;
+    return await db.insert(
+        'week_state',
+        {
+          'id': week,
+          'phase_index': index,
+          'seconds_elapsed': seconds,
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  static Future<Map<String, Object?>?> getWeekState(int week) async {
+    final db = await database;
+    final res = await db.rawQuery(
+        'SELECT phase_index, seconds_elapsed FROM week_state WHERE id = ?',
+        [week]);
+    if (res.length == 1) {
+      return res.first;
+    } else {
+      return null;
+    }
+  }
+
+  static Future<int> deleteWeekState(int week) async {
+    final db = await database;
+    return await db.rawDelete('DELETE FROM week_state WHERE id = ?', [week]);
   }
 
   static Future<int> getTimeSession() async {
