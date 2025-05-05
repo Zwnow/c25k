@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class C25KStopwatch extends StatefulWidget {
   final void Function(int seconds)? onSecondTick;
 
-  const C25KStopwatch({Key? key, this.onSecondTick}) : super(key: key);
+  const C25KStopwatch({super.key, this.onSecondTick});
 
   @override
   State<C25KStopwatch> createState() => _C25KStopwatchState();
@@ -34,7 +34,6 @@ class _C25KStopwatchState extends State<C25KStopwatch> {
       if (currentSecond != _lastEmittedSecond) {
         _lastEmittedSecond = currentSecond;
         if (widget.onSecondTick != null) {
-          print("Firing");
           widget.onSecondTick!(currentSecond);
         }
       }
@@ -54,6 +53,7 @@ class _C25KStopwatchState extends State<C25KStopwatch> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
