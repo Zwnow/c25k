@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:c25k/app_state.dart';
 import 'package:c25k/database_helper.dart';
 import 'package:c25k/pages/first_week.dart';
+import 'package:c25k/pages/second_week.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -84,6 +85,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
               child: Text("Week 1"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SecondWeek(),
+                  ),
+                );
+              },
+              child: Text("Week 2"),
             ),
           ],
         ),
